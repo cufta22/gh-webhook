@@ -17,6 +17,7 @@ app.use(bodyParser.json());
 const PATHS = {
 	staging: process.env.SCRIPT_PATH_STAGING,
 	production: process.env.SCRIPT_PATH_PRODUCTION,
+	script_name: process.env.SCRIPT_NAME,
 };
 
 // Webhook route
@@ -40,13 +41,16 @@ app.post("/postreceive", (req, res) => {
 	const scriptPath = branch === "master" ? PATHS.production : PATHS.staging;
 
 	// Trigger deployment script (e.g., pulling the latest changes)
-	exec(`bash ${scriptPath}`, (err, stdout, stderr) => {
-		if (err) {
-			return res.status(500).send("Error during redeployment");
-		}
+	exec(
+		`cd ${scriptPath} && bash ${PATHS.script_name}`,
+		(err, stdout, stderr) => {
+			if (err) {
+				return res.status(500).send("Error during redeployment");
+			}
 
-		res.status(200).send("Deployment triggered successfully");
-	});
+			res.status(200).send("Deployment triggered successfully");
+		},
+	);
 });
 
 app.listen(port, () => {
