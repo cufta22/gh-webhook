@@ -35,14 +35,15 @@ app.post("/postreceive", (req, res) => {
 	// }
 
 	// Extract the branch name from the "ref" field
-	const ref = payload.ref; // e.g., "refs/heads/main"
-	const branch = ref.split("/")[2]; // This will give "main" (or any branch name)
+	const ref = payload.ref; // e.g., "refs/heads/master"
+	const branch = ref.split("/")[2]; // This will give "master" (or any branch name)
 
 	const scriptPath = branch === "master" ? PATHS.production : PATHS.staging;
+	const scriptArg = branch === "master" ? "production" : "staging";
 
 	// Trigger deployment script (e.g., pulling the latest changes)
 	exec(
-		`cd ${scriptPath} && bash ${PATHS.script_name}`,
+		`cd ${scriptPath} && bash ${PATHS.script_name} ${scriptArg}`,
 		(err, stdout, stderr) => {
 			if (err) {
 				return res.status(500).send("Error during redeployment");
