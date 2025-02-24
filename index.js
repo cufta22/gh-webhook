@@ -1,6 +1,6 @@
-const express = require("express");
-const bodyParser = require("body-parser");
-const { exec } = require("node:child_process");
+import express from "express";
+import bodyParser from "body-parser";
+import { exec } from "node:child_process";
 
 // Load the environment variables
 import * as dotenv from "dotenv";
