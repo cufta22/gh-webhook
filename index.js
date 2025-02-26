@@ -41,7 +41,7 @@ app.post("/postreceive", (req, res) => {
 	const scriptPath = branch === "master" ? PATHS.production : PATHS.staging;
 	const scriptArg = branch === "master" ? "production" : "staging";
 
-	// Trigger deployment script (e.g., pulling the latest changes)
+	// Trigger deployment script
 	exec(
 		`cd ${scriptPath} && bash ${PATHS.script_name} ${scriptArg}`,
 		(err, stdout, stderr) => {
